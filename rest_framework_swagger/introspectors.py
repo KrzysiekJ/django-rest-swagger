@@ -5,6 +5,8 @@ from unipath import Path
 
 from django.contrib.admindocs.utils import trim_docstring
 
+from rest_framework import parsers
+from rest_framework.settings import api_settings
 from rest_framework.views import get_view_name, get_view_description
 
 
@@ -186,6 +188,12 @@ class BaseIntrospector(object):
         Builds form parameters from the serializer class
         """
         data = []
+
+        # A quick and dirty hack to skip generation of form parameters if we
+        # don't use FormParser.
+        if not any(isinstance(parser, parsers.FormParser) for parser in api_settings.DEFAULT_PARSER_CLASSES):
+            return data
+
         serializer = self.get_serializer_class(callback, path)
 
         if serializer is None:
