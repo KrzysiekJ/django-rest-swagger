@@ -52,6 +52,7 @@ class DocumentationGenerator(BaseIntrospector):
                 'nickname': introspector.get_nickname(callback),
                 'notes': introspector.get_notes(callback, method, path),
                 'responseClass': serializer_name,
+                'responseMessages': introspector.get_error_codes(callback, method, path),
             }
 
             parameters = introspector.get_parameters(callback, method, path)

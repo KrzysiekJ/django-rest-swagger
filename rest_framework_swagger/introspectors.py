@@ -108,6 +108,9 @@ class BaseIntrospector(object):
 
         return "<br/>".join(split_lines)
 
+    def get_error_codes(self, callback, method, path):
+        return getattr(callback, 'get_swagger_error_codes', lambda method, path: [])(method, path)
+
     def get_models(self, apis):
         """
         Builds a list of Swagger 'models'. These represent
