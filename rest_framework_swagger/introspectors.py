@@ -120,10 +120,15 @@ class BaseIntrospector(object):
         for serializer in serializers:
             properties = self.get_serializer_fields(serializer)
 
-            models[serializer.__name__] = {
-                'id': serializer.__name__,
-                'properties': properties,
+            serializer_models = {
+                serializer.__name__: {
+                    'id': serializer.__name__,
+                    'properties': properties,
+                }
             }
+
+            # A quick and dirty way to allow serializer to change the models data.
+            models.update(getattr(serializer, 'modify_swagger_models', lambda x: x)(serializer_models))
 
         return models
 
