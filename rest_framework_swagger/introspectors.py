@@ -47,8 +47,8 @@ class BaseIntrospector(object):
         """
         try:
             docstring = eval("callback.%s.__doc__" % (str(method).lower()))
-            if sys.version_info < (3,):
-                docstring = docstring.decode('utf-8')
+            # if sys.version_info < (3,):
+            #     docstring = docstring.decode('utf-8')
             return docstring
         except AttributeError:
             return None
