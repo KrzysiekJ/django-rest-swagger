@@ -23,6 +23,12 @@ class DocumentationGenerator(BaseIntrospector):
 
         return api_docs
 
+    def get_introspector(self, callback):
+        if issubclass(callback, viewsets.ViewSetMixin):
+            return ViewSetIntrospector()
+        else:
+            return APIViewIntrospector()
+
     def get_operations(self, api):
         """
         Returns docs for the allowed methods of an API endpoint
@@ -31,12 +37,7 @@ class DocumentationGenerator(BaseIntrospector):
         path = api['path']
         callback = api['callback']
         callback.request = HttpRequest()
-
-        if issubclass(callback, viewsets.ViewSetMixin):
-            introspector = ViewSetIntrospector()
-        else:
-            introspector = APIViewIntrospector()
-
+        introspector = self.get_introspector(callback)
         allowed_methods = introspector.get_allowed_methods(callback, path)
 
         for method in allowed_methods:
